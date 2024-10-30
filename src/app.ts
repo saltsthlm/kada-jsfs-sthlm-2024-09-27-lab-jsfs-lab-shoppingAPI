@@ -6,10 +6,12 @@ import { readdir, readFile, writeFile, appendFile } from "fs/promises";
 import type { Cart, Product } from "./__tests__/e2e/e2e-types";
 import { v4 as uuidv4 } from "uuid";
 import { validate } from "./cart/api/validation";
+import { constants } from "buffer";
 
 const app = express();
 
 // Some nice middleware :)
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -68,7 +70,12 @@ app.post("/api/carts/", (req: Request, res: Response) => {
 });
 
 app.patch("/api/carts/:id", async (req: Request, res: Response) => {
-  const product = validate(req.body);
+
+  const product = validate({
+    ...req.body,
+    quantity: Number(req.body.quantity),
+    price: Number(req.body.price)
+  });
 
   if (!product.success) {
     res.status(400).json({ error: "Invalid request" });
