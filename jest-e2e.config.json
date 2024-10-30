@@ -2,5 +2,5 @@
   "testPathIgnorePatterns": ["/node_modules/", "/config"],
   "transform": {
     "^.+.tsx?$": ["ts-jest", {}]
-  } 
+  }
 }
