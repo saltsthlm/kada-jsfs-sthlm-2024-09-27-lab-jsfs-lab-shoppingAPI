@@ -71,32 +71,54 @@ app.post("/api/carts/", (req: Request, res: Response) => {
 
 app.patch("/api/carts/:id", async (req: Request, res: Response) => {
   if (!req.body) {
-    res.status(400).json({ error: "Bad Request" });
-  } else {
-    const product = validate({
-      ...req.body,
-      quantity: Number(req.body.quantity),
-      price: Number(req.body.price),
-    });
+     res.status(400).json({ error: "Bad Request" });
+     return;
+  } 
+  
+  const product = validate({
+    ...req.body,
+    quantity: Number(req.body.quantity),
+    price: Number(req.body.price),
+  });
 
-    if (!product.success) {
-      res.status(400).json({ error: "Invalid request" });
+  if (!product.success) {
+    res.status(400).json({ error: "Invalid request" });
+    return;
+  } 
+  
+  const cartPath = path.join(carts.db, req.params.id);
+
+  if (!existsSync(cartPath)) {
+    res.status(400).json("Bad Request");
+    return;
+  } 
+
+  try {
+    let products = JSON.parse(await readFile(cartPath, "utf-8")) as Product[];
+
+    if (products.find(el => el.id === product.data.id)) {
+      products = products.map(cartProduct => {
+        if (cartProduct.id === product.data.id) {
+          return {
+            ...cartProduct,
+            quantity: cartProduct.quantity + product.data.quantity
+          };
+        }
+        return cartProduct;
+      })
     } else {
-      const cartPath = path.join(carts.db, req.params.id);
-      if (!existsSync(cartPath)) {
-        res.status(400).json("Bad Request");
-      } else {
-        const products = JSON.parse(
-          await readFile(cartPath, "utf-8"),
-        ) as Product[];
-        products.push(product.data);
-        await writeFile(cartPath, JSON.stringify(products), "utf8");
-
-        res.status(204).json("Added product to cart: " + product.data.id);
-      }
+      products.push(product.data);
     }
-  }
+
+    await writeFile(cartPath, JSON.stringify(products), "utf8");
+
+    res.status(204).json();
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }   
 });
+
+
 
 app.get("/api/carts/:id", async (req: Request, res: Response) => {
   try {
