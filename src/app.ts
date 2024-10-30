@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/products/", async (req: Request, res: Response) => {
   try {
-    let fileArr:Product[] = [];
+    let fileArr: Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
       const filePath = path.join(products.db, file);
@@ -69,6 +69,37 @@ app.post("/api/carts/", (req: Request, res: Response) => {
 });
 
 app.patch("/api/carts/:id", async (req: Request, res: Response) => {
+    const cartId = req.params.id;
+    console.log("CArt id", cartId)
+    
+    const product = validate(req.body);
+
+
+    if (!product.success) {
+        res.status(400).json({error: "Invalid request"});
+    } else {
+        await appendFile(path.join(carts.db, cartId), JSON.stringify(product.data), 'utf8');
+
+        res.status(204).json("Added product to carrt: " + product.data.id);
+    }    
+});
+
+app.get("/api/carts/:id", async (req: Request, res: Response) => {
+    try {
+        const cart: Cart = [];
+       
+          const filePath = path.join(carts.db, req.params.id);
+          const products = await readFile(filePath, "utf-8");
+          
+
+    
+          fileArr.push(JSON.parse(fileContent));
+        
+    
+        res.json(fileArr);
+      } catch (err) {
+        console.error(err);
+      }
     const cartId = req.params.id;
     console.log("CArt id", cartId)
     
