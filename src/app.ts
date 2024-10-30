@@ -57,13 +57,17 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
 app.post("/api/carts/", (req: Request, res: Response) => {
     const id = uuidv4();
 
-    // const cart: Cart = {
-    //     id,
-    //     products: []
-    // };
+    const cart: Cart = {
+        id,
+        products: []
+    };
 
-    res.status(201).location(`/api/carts/${id}`).json(id);
+    res.status(201).location(`/api/carts/${id}`).json(cart);
 });
+
+app.use((req: Request, res: Response) => {
+    res.status(404).json({error: "Not found"});
+})
 
 
 // Add your own middlware here!
