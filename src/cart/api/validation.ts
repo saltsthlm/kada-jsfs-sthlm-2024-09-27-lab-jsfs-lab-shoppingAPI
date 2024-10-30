@@ -1,20 +1,16 @@
 /*
  * You may use this validator to enforce data integrity in your API.
  */
-import Joi from '@hapi/joi';
 
-const itemSchema = Joi.object().keys({
-  id: Joi.string().required(),
-  item: Joi.string().required(),
-  quantity: Joi.number().integer().required(),
-  price: Joi.number().required(),
+import { z } from "zod";
+
+export type ItemSchema = z.infer<typeof itemSchema>;
+
+const itemSchema = z.object({
+  id: z.string(),
+  item: z.string(),
+  quantity: z.number(),
+  price: z.number(),
 });
 
-function validateItem(obj : object) {
-  return itemSchema.validate(obj);
-}
-
-export = {
-  validateItem,
-  itemSchema,
-};
+export const validate = (obj: ItemSchema) => itemSchema.safeParse(obj); 
