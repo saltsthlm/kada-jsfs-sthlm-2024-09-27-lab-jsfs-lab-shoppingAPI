@@ -13,4 +13,4 @@ const itemSchema = z.object({
   price: z.number(),
 });
 
-export const validate = (obj: ItemSchema) => itemSchema.safeParse(obj); 
+export const validate = (obj: ItemSchema) => itemSchema.safeParse(obj);

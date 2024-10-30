@@ -3,14 +3,14 @@
 // clients to use our internal models
 
 export type Product = {
-  id: string,
-  item: string,
-  price: number,
-  quantity: number,
-  description?: string,
+  id: string;
+  item: string;
+  price: number;
+  quantity: number;
+  description?: string;
 };
 
 export type Cart = {
-  id: string,
-  products : Product[]
+  id: string;
+  products: Product[];
 };
