@@ -3,6 +3,7 @@ import path from "path";
 import config from "./config";
 const { products, carts } = config;
 import { readdir, readFile } from "fs/promises";
+import type { Product } from "./__tests__/e2e/e2e-types";
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(express.static(path.join(__dirname, "public")));
 let counter = 1;
 app.get("/api/products/", async (req: Request, res: Response) => {
   try {
-    let fileArr = [];
+    let fileArr:Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
       const filePath = path.join(products.db, file);
@@ -33,7 +34,7 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
   console.log(paramsId);
 
   try {
-    let fileArr = [];
+    let fileArr:Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
       const filePath = path.join(products.db, file);
@@ -43,7 +44,9 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
     }
 
     const product = fileArr.filter((product) => product.id === paramsId)
-
+    if(product.length === 0) {
+      res.json("No product with this id: " + paramsId)
+    }
     res.json(product);
   } catch (err) {
     console.error(err);
