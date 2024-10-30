@@ -43,8 +43,8 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
       fileArr.push(JSON.parse(fileContent));
     }
 
-    const product = fileArr.filter((product) => product.id === paramsId)
-    if(product.length === 0) {
+    const product = fileArr.find((product) => product.id === paramsId)
+    if(typeof product === 'undefined') {
       res.status(404).json("No product with this id: " + paramsId);
     }
     res.json(product);
