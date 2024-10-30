@@ -2,9 +2,10 @@ import express, { Request, Response } from "express";
 import path from "path";
 import config from "./config";
 const { products, carts } = config;
-import { readdir, readFile } from "fs/promises";
+import { readdir, readFile, writeFile, appendFile } from "fs/promises";
 import type { Cart, Product } from "./__tests__/e2e/e2e-types";
 import { v4 as uuidv4 } from 'uuid';
+import { validate } from "./cart/api/validation";
 
 const app = express();
 
@@ -62,8 +63,27 @@ app.post("/api/carts/", (req: Request, res: Response) => {
         products: []
     };
 
+    writeFile(path.join(carts.db, id), JSON.stringify(cart.products));    
+
     res.status(201).location(`/api/carts/${id}`).json(cart);
 });
+
+app.patch("/api/carts/:id", async (req: Request, res: Response) => {
+    const cartId = req.params.id;
+    console.log("CArt id", cartId)
+    
+    const product = validate(req.body);
+
+
+    if (!product.success) {
+        res.status(400).json({error: "Invalid request"});
+    } else {
+        await appendFile(path.join(carts.db, cartId), JSON.stringify(product.data), 'utf8');
+
+        res.status(204).json("Added product to carrt: " + product.data.id);
+    }    
+});
+
 
 app.use((req: Request, res: Response) => {
     res.status(404).json({error: "Not found"});
