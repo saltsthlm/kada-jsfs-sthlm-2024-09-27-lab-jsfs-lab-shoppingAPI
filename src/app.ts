@@ -3,14 +3,15 @@ import path from "path";
 import config from "./config";
 const { products, carts } = config;
 import { readdir, readFile } from "fs/promises";
-import type { Product } from "./__tests__/e2e/e2e-types";
+import type { Cart, Product } from "./__tests__/e2e/e2e-types";
+import { v4 as uuidv4 } from 'uuid';
 
 const app = express();
 
 // Some nice middleware :)
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
-let counter = 1;
+
 app.get("/api/products/", async (req: Request, res: Response) => {
   try {
     let fileArr:Product[] = [];
@@ -51,6 +52,17 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
   }
+});
+
+app.post("/api/carts/", (req: Request, res: Response) => {
+    const id = uuidv4();
+
+    // const cart: Cart = {
+    //     id,
+    //     products: []
+    // };
+
+    res.status(201).location(`/api/carts/${id}`).json(id);
 });
 
 
