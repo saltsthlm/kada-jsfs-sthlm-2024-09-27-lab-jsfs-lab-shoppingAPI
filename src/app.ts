@@ -45,13 +45,15 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
 
     const product = fileArr.filter((product) => product.id === paramsId)
     if(product.length === 0) {
-      res.json("No product with this id: " + paramsId)
+      res.status(404).json("No product with this id: " + paramsId);
     }
     res.json(product);
   } catch (err) {
     console.error(err);
   }
 });
+
+
 // Add your own middlware here!
 
 export default app;
