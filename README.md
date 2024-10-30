@@ -16,7 +16,7 @@ The basic project structure is already laid out for you in the `package.json` fi
 
 There are also a complete set of e2e tests that will guide you to a (hopefully) complete API.
 
-_Note: Just because there is an end to end (e2e) test suite __does not__ mean that you can skip the unit tests!!!_ Unit test the small functions and then ensure that all the units goes together with the e2e tests.
+_Note: Just because there is an end to end (e2e) test suite **does not** mean that you can skip the unit tests!!!_ Unit test the small functions and then ensure that all the units goes together with the e2e tests.
 
 ### Products
 
