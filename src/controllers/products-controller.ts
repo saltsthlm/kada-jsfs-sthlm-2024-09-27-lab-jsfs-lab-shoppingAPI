@@ -6,12 +6,12 @@ import config from "../config";
 
 const { products } = config;
 
-export const getProducts = (async (req: Request,  res: Response) => {
+export const getProducts = async (req: Request, res: Response) => {
   try {
-    const fileArr: Product [] = [];
+    const fileArr: Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
-      const filePath = path .join(products.db, file);
+      const filePath = path.join(products.db, file);
       const fileContent = await readFile(filePath, "utf-8");
 
       fileArr.push(JSON.parse(fileContent));
@@ -21,9 +21,9 @@ export const getProducts = (async (req: Request,  res: Response) => {
   } catch (err) {
     console.error(err);
   }
-});
+};
 
-export const getProduct = (async (req: Request,  res: Response) => {
+export const getProduct = async (req: Request, res: Response) => {
   const paramsId = req.params.id;
 
   try {
@@ -46,4 +46,4 @@ export const getProduct = (async (req: Request,  res: Response) => {
   } catch (error) {
     console.error(error);
   }
-});
+};

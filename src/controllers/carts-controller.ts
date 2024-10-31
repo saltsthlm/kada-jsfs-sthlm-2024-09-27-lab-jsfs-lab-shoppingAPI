@@ -9,23 +9,23 @@ import { existsSync } from "fs";
 
 const { carts } = config;
 
-export const addToCart = (async (req: Request,  res: Response) => {
-  const id = uuidv4 ();
+export const addToCart = async (req: Request, res: Response) => {
+  const id = uuidv4();
 
   const cart: Cart = {
     id,
     products: [],
   };
-   try {
+  try {
     writeFile(path.join(carts.db, id), JSON.stringify(cart.products));
 
     res.status(201).location(`/api/carts/${id}`).json(cart);
-   } catch (error) {
-      console.log(error);
-   }  
-});
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-export const updateCart = (async (req: Request,  res: Response) => {
+export const updateCart = async (req: Request, res: Response) => {
   if (!req.body) {
     res.status(400).json({ error: "Bad Request" });
     return;
@@ -73,9 +73,9 @@ export const updateCart = (async (req: Request,  res: Response) => {
     console.log(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
-});
+};
 
-export const getCart = (async (req: Request,  res: Response) => {
+export const getCart = async (req: Request, res: Response) => {
   try {
     const filePath = path.join(carts.db, req.params.id);
     if (!existsSync(filePath)) {
@@ -95,9 +95,9 @@ export const getCart = (async (req: Request,  res: Response) => {
   } catch (err) {
     console.error(err);
   }
-});
+};
 
-export const deleteCart = (async (req: Request,  res: Response) => {
+export const deleteCart = async (req: Request, res: Response) => {
   const cartPath = path.join(carts.db, req.params.id);
 
   if (existsSync(cartPath)) {
@@ -106,4 +106,4 @@ export const deleteCart = (async (req: Request,  res: Response) => {
   } else {
     res.status(204).json("Cart doesn't exists");
   }
-});
+};
