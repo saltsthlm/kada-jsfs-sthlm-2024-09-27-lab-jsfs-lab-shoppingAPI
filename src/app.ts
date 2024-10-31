@@ -81,7 +81,7 @@ app.patch("/api/carts/:id", async (req: Request, res: Response) => {
     price: Number(req.body.price),
   });
 
-  if (!product.success || product.data.price < 0) {
+  if (!product.success || product.data.price < 0 || product.data.quantity < 0) {
     res.status(400).json({ error: "Invalid request" });
     return;
   }
