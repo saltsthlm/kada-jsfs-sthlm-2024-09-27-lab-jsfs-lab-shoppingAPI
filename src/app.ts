@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/products/", async (req: Request, res: Response) => {
   try {
-    let fileArr: Product[] = [];
+    const fileArr: Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
       const filePath = path.join(products.db, file);
@@ -37,7 +37,7 @@ app.get("/api/products/:id", async (req: Request, res: Response) => {
   console.log(paramsId);
 
   try {
-    let fileArr: Product[] = [];
+    const fileArr: Product[] = [];
     const files = await readdir(products.db);
     for (const file of files) {
       const filePath = path.join(products.db, file);

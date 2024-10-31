@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import fs from "fs";
 
 const env = process.env.NODE_ENV || "development";
