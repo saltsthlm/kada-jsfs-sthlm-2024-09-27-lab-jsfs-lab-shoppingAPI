@@ -7,6 +7,7 @@ export const logger = (req:Request, res:Response, next:NextFunction) => {
     const url = req.url;
     const headers = req.headers;
     const timestamp = new Date();
+    
     console.log(id, timestamp, method, url, headers);
 
     next();
